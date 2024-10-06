@@ -404,7 +404,10 @@ export default class aTemplate {
     return html.replace(/^([\t ])*\n/gm, '');
   }
 
-  update(renderWay = 'html', part) {
+  update(renderWay, part) {
+    if (typeof renderWay === 'undefined') {
+      renderWay = 'html';
+    }
     const templates = this.templates;
     if (this.beforeUpdated) {
       this.beforeUpdated();
