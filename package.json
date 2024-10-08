@@ -11,7 +11,7 @@
     "minifyjs": "uglifyjs ./build/a-template.js --comments 'license' -o ./build/a-template.min.js",
     "build": "npm run bundle && npm run minifyjs",
     "build:lib": "babel src --out-dir lib",
-    "watch": "watch 'npm run build && npm run build:lib' ./src/",
+    "watch": "chokidar \"./src/**/*.js\" -c \"npm run build && npm run build:lib\"",
     "patch": "npm run lint && npm version patch && node ./tools/index.js",
     "minor": "npm run lint && npm version minor &&  node ./tools/index.js",
     "major": "npm run lint && npm version major && node ./tools/index.js",
