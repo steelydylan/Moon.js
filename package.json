@@ -11,7 +11,7 @@
     "minifyjs": "uglifyjs ./build/a-template.js --comments 'license' -o ./build/a-template.min.js",
     "build": "npm run bundle && npm run minifyjs",
     "build:lib": "babel src --out-dir lib",
-    "watch": "watch 'npm run build && npm run build:lib' ./src/",
+    "watch": "chokidar \"./src/**/*.js\" -c \"npm run build && npm run build:lib\"",
     "patch": "npm run lint && npm version patch && node ./tools/index.js",
     "minor": "npm run lint && npm version minor &&  node ./tools/index.js",
     "major": "npm run lint && npm version major && node ./tools/index.js",
@@ -24,6 +24,7 @@
     "babel-preset-es2015": "^6.18.0",
     "babelify": "^7.3.0",
     "browserify": "^13.1.1",
+    "chokidar-cli": "^3.0.0",
     "co": "^4.6.0",
     "eslint": "^3.13.0",
     "eslint-config-airbnb": "^13.0.0",
@@ -34,7 +35,6 @@
     "node-cmd": "^2.0.0",
     "np": "^2.16.0",
     "uglifyjs": "^2.4.10",
-    "watch": "^1.0.1",
     "watchify": "^3.7.0"
   },
   "dependencies": {
