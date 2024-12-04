@@ -7,7 +7,6 @@ const bindType = 'input change click';
 const dataAction = `${eventType.replace(/([a-z]+)/g, '[data-action-$1],')}[data-action]`;
 
 export default class aTemplate {
-
   constructor(opt) {
     this.atemplate = [];
     this.events = [];
@@ -22,8 +21,8 @@ export default class aTemplate {
     if (!this.templates) {
       this.templates = [];
     }
-    const templates = this.templates;
-    const length = templates.length;
+    const { templates } = this;
+    const { length } = templates;
     for (let i = 0, n = length; i < n; i += 1) {
       const template = this.templates[i];
       const html = selector(`#${template}`).innerHTML;
@@ -36,7 +35,7 @@ export default class aTemplate {
       const target = e.delegateTarget;
       const data = target.getAttribute('data-bind');
       const attr = target.getAttribute('href');
-      let value = target.value;
+      let { value } = target;
       if (attr) {
         value = value.replace('#', '');
       }
@@ -153,7 +152,7 @@ export default class aTemplate {
   getRandText(limit) {
     let ret = '';
     const strings = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const length = strings.length;
+    const { length } = strings;
     for (let i = 0; i < limit; i += 1) {
       ret += strings.charAt(Math.floor(this.getRand(0, length)));
     }
@@ -161,7 +160,7 @@ export default class aTemplate {
   }
 
   getDataFromObj(s, o) {
-    s = s.replace(/\[([\w\-\.ぁ-んァ-ヶ亜-熙]+)\]/g, '.$1');  // convert indexes to properties
+    s = s.replace(/\[([\w\-\.ぁ-んァ-ヶ亜-熙]+)\]/g, '.$1'); // convert indexes to properties
     s = s.replace(/^\./, ''); // strip leading dot
     const a = s.split('.');
     while (a.length) {
@@ -209,7 +208,7 @@ export default class aTemplate {
     const touchnots = html.match(/<!-- BEGIN ([\w\-\.ぁ-んァ-ヶ亜-熙]+):touchnot#([\w\-\.ぁ-んァ-ヶ亜-熙]+) -->/g);
     const exists = html.match(/<!-- BEGIN ([\w\-\.ぁ-んァ-ヶ亜-熙]+):exist -->/g);
     const empties = html.match(/<!-- BEGIN ([\w\-\.ぁ-んァ-ヶ亜-熙]+):empty -->/g);
-    /* タッチブロック解決*/
+    /* タッチブロック解決 */
     if (touchs) {
       for (let k = 0, n = touchs.length; k < n; k += 1) {
         let start = touchs[k];
@@ -225,7 +224,7 @@ export default class aTemplate {
         });
       }
     }
-    /* タッチノットブロック解決*/
+    /* タッチノットブロック解決 */
     if (touchnots) {
       for (let k = 0, n = touchnots.length; k < n; k += 1) {
         let start = touchnots[k];
@@ -241,7 +240,7 @@ export default class aTemplate {
         });
       }
     }
-    /* existブロックを解決*/
+    /* existブロックを解決 */
     if (exists) {
       for (let k = 0, n = exists.length; k < n; k += 1) {
         let start = exists[k];
@@ -257,7 +256,7 @@ export default class aTemplate {
         });
       }
     }
-    /* emptyブロックを解決*/
+    /* emptyブロックを解決 */
     if (empties) {
       for (let k = 0, n = empties.length; k < n; k += 1) {
         let start = empties[k];
@@ -273,7 +272,7 @@ export default class aTemplate {
         });
       }
     }
-    /* 変数解決*/
+    /* 変数解決 */
     html = html.replace(/{([\w\-\.ぁ-んァ-ヶ亜-熙]+)}(\[([\w\-\.ぁ-んァ-ヶ亜-熙]+)\])*/g, (n, key3, key4, converter) => {
       let data;
       if (`${key3}` === 'i') {
@@ -297,7 +296,8 @@ export default class aTemplate {
     });
     return html;
   }
-  /* 絶対パス形式の変数を解決*/
+
+  /* 絶対パス形式の変数を解決 */
   resolveAbsBlock(html) {
     const that = this;
     html = html.replace(/{(.*?)}/g, (n, key3) => {
@@ -331,7 +331,7 @@ export default class aTemplate {
   resolveLoop(html) {
     const loop = /<!-- BEGIN ([\w\-\.ぁ-んァ-ヶ亜-熙]+?):loop -->(([\n\r\t]|.)*?)<!-- END ([\w\-\.ぁ-んァ-ヶ亜-熙]+?):loop -->/g;
     const that = this;
-    /* ループ文解決*/
+    /* ループ文解決 */
     html = html.replace(loop, (m, key, val) => {
       const keyItem = that.getDataByString(key);
       let keys = [];
@@ -346,7 +346,7 @@ export default class aTemplate {
           ret += that.resolveBlock(val, keys[i], i);
         }
       }
-      /* エスケープ削除*/
+      /* エスケープ削除 */
       ret = ret.replace(/\\([^\\])/g, '$1');
       return ret;
     });
@@ -354,7 +354,7 @@ export default class aTemplate {
   }
 
   removeData(arr) {
-    const data = this.data;
+    const { data } = this;
     Object.keys(data).forEach((i) => {
       for (let t = 0, n = arr.length; t < n; t += 1) {
         if (i === arr[t]) {
@@ -374,7 +374,7 @@ export default class aTemplate {
   }
 
   getHtml(query, row) {
-    const template = this.atemplate.find(item => item.id === query);
+    const template = this.atemplate.find((item) => item.id === query);
     let html = '';
     if (template && template.html) {
       html = template.html;
@@ -385,27 +385,30 @@ export default class aTemplate {
     if (!html) {
       return '';
     }
-    const data = this.data;
-    /* インクルード解決*/
+    const { data } = this;
+    /* インクルード解決 */
     html = this.resolveInclude(html);
-    /* with解決*/
+    /* with解決 */
     html = this.resolveWith(html);
-    /* ループ解決*/
+    /* ループ解決 */
     while (this.hasLoop(html)) {
       html = this.resolveLoop(html);
     }
-    /* 変数解決*/
+    /* 変数解決 */
     html = this.resolveBlock(html, data);
-    /* エスケープ削除*/
+    /* エスケープ削除 */
     html = html.replace(/\\([^\\])/g, '$1');
-    /* 絶対パスで指定された変数を解決*/
+    /* 絶対パスで指定された変数を解決 */
     html = this.resolveAbsBlock(html);
-    /* 空行削除*/
+    /* 空行削除 */
     return html.replace(/^([\t ])*\n/gm, '');
   }
 
-  update(renderWay = 'html', part) {
-    const templates = this.templates;
+  update(renderWay, part) {
+    if (typeof renderWay === 'undefined') {
+      renderWay = 'html';
+    }
+    const { templates } = this;
     if (this.beforeUpdated) {
       this.beforeUpdated();
     }
@@ -431,7 +434,7 @@ export default class aTemplate {
       } else {
         morphdom(target, `<div data-id='${tem}'>${html}</div>`);
       }
-      const template = this.atemplate.find(item => item.id === tem);
+      const template = this.atemplate.find((item) => item.id === tem);
       if (!template.binded) {
         template.binded = true;
         this.addDataBind(selector(`[data-id='${tem}']`));
@@ -446,7 +449,7 @@ export default class aTemplate {
   }
 
   updateBindingData(part) {
-    const templates = this.templates;
+    const { templates } = this;
     for (let i = 0, n = templates.length; i < n; i += 1) {
       const temp = templates[i];
       let template = selector(`[data-id='${temp}']`);
